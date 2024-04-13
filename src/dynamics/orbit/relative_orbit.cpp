@@ -99,7 +99,7 @@ void RelativeOrbit::Propagate(const double end_time_s, const double current_time
 
   if (!is_calc_enabled_) return;
 
-  spacecraft_acceleration_i_m_s2_ *= 0.0;  // Disturbance acceleration are not considered in relative orbit propagation
+  // spacecraft_acceleration_i_m_s2_ *= 0.0;  // Disturbance acceleration are not considered in relative orbit propagation
 
   if (update_method_ == kRk4) {
     PropagateRk4(end_time_s);
@@ -107,6 +107,11 @@ void RelativeOrbit::Propagate(const double end_time_s, const double current_time
   {
     PropagateStm(end_time_s);
   }
+
+  //実際にはrtn座標系の加速度
+  spacecraft_acceleration_i_m_s2_[0] = GetDerivative()(3);
+  spacecraft_acceleration_i_m_s2_[1] = GetDerivative()(4);
+  spacecraft_acceleration_i_m_s2_[2] = GetDerivative()(5);
 
   libra::Vector<3> reference_sat_position_i = relative_information_->GetReferenceSatDynamics(reference_spacecraft_id_)->GetOrbit().GetPosition_i_m();
   libra::Vector<3> reference_sat_velocity_i =

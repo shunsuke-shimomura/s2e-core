@@ -38,7 +38,8 @@ libra::Vector<N> Sensor<N>::Measure(const libra::Vector<N> true_value_c) {
     calc_value_c[i] += normal_random_noise_c_[i];
   }
   ++random_walk_noise_c_;  // update Random Walk
-  return Clip(calc_value_c);
+  auto ret = Clip(calc_value_c);
+  return ret;
 }
 
 template <size_t N>
