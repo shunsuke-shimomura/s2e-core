@@ -7,6 +7,7 @@
 
 #include <library/initialize/initialize_file_access.hpp>
 #include <library/logger/initialize_log.hpp>
+#include <library/randomization/global_randomization.hpp>
 #include <string>
 
 SimulationCase::SimulationCase(const std::string initialize_base_file) {
@@ -66,7 +67,7 @@ void SimulationCase::Main() {
 
     // Debug output
     if (global_environment_->GetSimulationTime().GetState().disp_output) {
-      std::cout << "Progress: " << global_environment_->GetSimulationTime().GetProgressionRate() << "%\r";
+      std::cout << "\rProgress: " << global_environment_->GetSimulationTime().GetProgressionRate() << "%" << std::flush;
     }
   }
 }
@@ -104,4 +105,8 @@ void SimulationCase::InitializeSimulationConfiguration(const std::string initial
   // Global Environment
   global_environment_ = new GlobalEnvironment(&simulation_configuration_);
   global_environment_->LogSetup(*(simulation_configuration_.main_logger_));
+
+  section = "RANDOMIZE";
+  int seed = simulation_base_ini.ReadInt(section,"rand_seed");
+  global_randomization.SetSeed(simulation_base_ini.ReadInt(section,"rand_seed"));
 }
